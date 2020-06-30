@@ -1,5 +1,5 @@
 /***
-selecting elements
+Selecting Elements
 ***/
 
 const nameField = document.getElementById('name');
@@ -11,10 +11,13 @@ const designField = document.getElementById('design');
 const designTheme = document.querySelectorAll('#design option');
 const jobRoleField = document.getElementById('title');
 const jobRole = document.querySelectorAll('#title option');
+const activitiesCheckboxes = document.querySelectorAll('.activities input'); 
+const activities = document.querySelector('.activities'); //chooses the entire fieldset
+let total = 0; //keeps track of the total cost of activities
 
 
 /***
-initial styling
+Initial Styling
 ***/
 
 //Name Field Styling
@@ -33,7 +36,7 @@ colorOptionsDiv.style.display = 'none'; //hides the color field initially
 designField.addEventListener('change', ()=> {colorOptionsDiv.style.display = 'block'}) //shows color field once a theme gets selected
 
 /*** 
-Display Input Field for 'other' Job Role
+Display Input Field For 'Other' Job Role
 ***/
 
 jobRoleField.addEventListener('change', ()=>{
@@ -42,7 +45,7 @@ jobRoleField.addEventListener('change', ()=>{
 })
 
 /*** 
-limiting color options based on selected theme 
+Limiting Color Options Based On Selected Theme 
 ***/
 designField.addEventListener('change', ()=> {
     for (let j = 0; j < color.length; j++) {color[j].style.display = 'block'} //resets the list of color options
@@ -60,5 +63,44 @@ designField.addEventListener('change', ()=> {
         }
     }
     })
+
+/*** 
+Filtering Activities Based On Checkbox Selection
+***/
+
+//listening for events on the entire fieldset
+document.querySelector('.activities').addEventListener('change', (e) => {      
+    const clicked = e.target;
+    //the clicked checkbox gets checked for whether it is already checked or not (condition). The conflicting appointments get greyed out or are made available again (code block)
+    if (activitiesCheckboxes[1] === clicked && activitiesCheckboxes[1].checked === true) {activitiesCheckboxes[3].disabled = true}
+    else if (activitiesCheckboxes[1] === clicked && activitiesCheckboxes[1].checked === false) {activitiesCheckboxes[3].disabled = false}
+    if (activitiesCheckboxes[2] === clicked && activitiesCheckboxes[2].checked === true) {activitiesCheckboxes[4].disabled = true}
+    else if (activitiesCheckboxes[2] === clicked && activitiesCheckboxes[2].checked === false) {activitiesCheckboxes[4].disabled = false}
+    if (activitiesCheckboxes[3] === clicked && activitiesCheckboxes[3].checked === true) {activitiesCheckboxes[1].disabled = true}
+    else if (activitiesCheckboxes[3] === clicked && activitiesCheckboxes[3].checked === false) {activitiesCheckboxes[1].disabled = false}
+    if (activitiesCheckboxes[4] === clicked && activitiesCheckboxes[4].checked === true) {activitiesCheckboxes[2].disabled = true}
+    else if (activitiesCheckboxes[4] === clicked && activitiesCheckboxes[4].checked === false) {activitiesCheckboxes[2].disabled = false}
+    
+    if (activities.lastElementChild.textContent.startsWith("Total:")) {activities.removeChild(activities.lastElementChild)}; //removes the total price info once it gets updated
+   
+    for (let i = 0; i < activitiesCheckboxes.length; i++){
+         if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === true) 
+                {total += parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))} //adds up the cost of all checked activities
+            else if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === false) 
+                {total -= parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))} //subtracts the cost of all unchecked activities
+    }
+    
+    if (total > 0) //makes sure the total is only displayed when it is not 0
+    {let totalCost = document.createElement('p'); 
+    totalCost.textContent = `Total: ${total}`;
+    activities.appendChild(totalCost)} //displays the total amount under the checkboxes
+})
+
+
+
+
+
+
+
 
 
