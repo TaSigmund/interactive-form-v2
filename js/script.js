@@ -11,9 +11,18 @@ const designField = document.getElementById('design');
 const designTheme = document.querySelectorAll('#design option');
 const jobRoleField = document.getElementById('title');
 const jobRole = document.querySelectorAll('#title option');
+
+//activities
 const activitiesCheckboxes = document.querySelectorAll('.activities input'); 
 const activities = document.querySelector('.activities'); //chooses the entire fieldset
 let total = 0; //keeps track of the total cost of activities
+
+//payment
+const paymentField = document.getElementById('payment');
+const selectPaymentMethod = document.querySelectorAll('#payment option'); //Selects the payment options
+const creditCardInfo = document.getElementById('credit-card');
+const paypalInfo = document.getElementById('paypal');
+const bitcoinInfo = document.getElementById('bitcoin');
 
 
 /***
@@ -97,7 +106,36 @@ document.querySelector('.activities').addEventListener('change', (e) => {
 })
 
 
+/*** 
+Payment options
+***/
 
+selectPaymentMethod[0].style.display = 'none'; //'Select Payment Option' does not appear in the drop down menu
+
+//initially only the credit card fields appear
+creditCardInfo.style.display = 'block';
+paypalInfo.style.display = 'none';
+bitcoinInfo.style.display = 'none';
+
+//depending on what payment option the user selects the corresponding field becomes visible and the other fields are hidden
+paymentField.addEventListener('change', () => {
+for (let i = 0; i < selectPaymentMethod.length; i++) {
+  if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'credit card') {
+        creditCardInfo.style.display = 'block';
+        paypalInfo.style.display = 'none';
+        bitcoinInfo.style.display = 'none';
+   }
+   else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'paypal') {
+    creditCardInfo.style.display = 'none';
+    paypalInfo.style.display = 'block';
+    bitcoinInfo.style.display = 'none';
+}
+    else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'bitcoin') {
+    creditCardInfo.style.display = 'none';
+    paypalInfo.style.display = 'none';
+    bitcoinInfo.style.display = 'block';
+}
+}})
 
 
 
