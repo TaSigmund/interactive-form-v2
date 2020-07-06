@@ -2,7 +2,9 @@
 Selecting Elements
 ***/
 
+const form = document.querySelector('form');
 const nameField = document.getElementById('name');
+const email = document.getElementById('mail');
 const otherJobRole = document.getElementById('other-title');
 const colorOptionsDiv = document.getElementById('colors-js-puns')
 const colorOptionsField = document.getElementById('color');
@@ -21,6 +23,9 @@ let total = 0; //keeps track of the total cost of activities
 const paymentField = document.getElementById('payment');
 const selectPaymentMethod = document.querySelectorAll('#payment option'); //Selects the payment options
 const creditCardInfo = document.getElementById('credit-card');
+const creditCardNumberField = document.getElementById('cc-num');
+const zipField = document.getElementById('zip');
+const cvvField = document.getElementById('cvv');
 const paypalInfo = document.getElementById('paypal');
 const bitcoinInfo = document.getElementById('bitcoin');
 
@@ -137,8 +142,74 @@ for (let i = 0; i < selectPaymentMethod.length; i++) {
 }
 }})
 
+/*** 
+Validation
+***/
 
+const nameFieldValidator = () => {
+if (nameField.value.length > 0) {nameField.style.borderColor = "white"; return true} //checks whether the user has typed something into the name field
+else {nameField.style.borderColor = "red"; return false}
+}
 
+const emailFieldValidator = () => {
+const emailRegex = /^[^@]+@[^@.]+\.[a-z]+$/i; //defines how an e-mail should be formatted
+if(emailRegex.test(email.value)){//checks whether the typed in mail address fits that definition
+    email.style.borderColor = "white"; return true;
+} 
+else {email.style.borderColor = "red"; return false;}
+}
+
+const activitiesValidator = () => {
+   for (let i = 0; i < activitiesCheckboxes.length; i++) {
+       if (activitiesCheckboxes[i].checked) {activities.style.borderColor = 'white'; return true}
+   }
+   activities.firstElementChild.style.color = 'red'; //this line only gets executed if no checkbox has been checked 
+   return false; 
+}
+
+const creditCardValidator = () => {
+const creditCardNumberRegex = /^\d{13}(\d{3})?$/
+if (creditCardNumberRegex.test(creditCardNumberField.value)){
+    creditCardNumberField.style.borderColor = "white"; return true;
+}
+else {creditCardNumberField.style.borderColor = "red"; return false;}
+}
+
+const zipValidator = () => {
+    const zipRegex = /^\d{5}$/
+    if (zipRegex.test(zipField.value)){
+        zipField.style.borderColor = "white"; return true;
+    }
+    else {zipField.style.borderColor = "red"; return false;}
+    }
+
+const cvvValidator = () => {
+    const cvvRegex = /^\d{3}$/
+    if (cvvRegex.test(cvvField.value)){
+        cvvField.style.borderColor = "white"; return true;
+    }
+    else {cvvField.style.borderColor = "red"; return false;}
+    }
+
+form.addEventListener('submit', (e)=>{
+nameFieldValidator();
+if (!nameFieldValidator()) {e.preventDefault(); console.log('A name is missing')} //checks the return value of the function and stops submission if it is false
+
+emailFieldValidator();
+if (!emailFieldValidator()) {e.preventDefault(); console.log('That is not an e-mail address')}
+
+activitiesValidator();
+if (!activitiesValidator()) {e.preventDefault(); console.log('No activity has been chosen')}
+
+creditCardValidator();
+if (!creditCardValidator()) {e.preventDefault(); console.log('That is not a credit card number')}
+
+zipValidator();
+if (!zipValidator()) {e.preventDefault(); console.log('That is not a ZIP code')}
+
+cvvValidator();
+if (!cvvValidator()) {e.preventDefault(); console.log('That is not a cvv number')}
+})
 
 
 
