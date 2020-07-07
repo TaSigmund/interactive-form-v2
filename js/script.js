@@ -61,6 +61,7 @@ jobRoleField.addEventListener('change', ()=>{
 /*** 
 Limiting Color Options Based On Selected Theme 
 ***/
+
 designField.addEventListener('change', ()=> {
     for (let j = 0; j < color.length; j++) {color[j].style.display = 'block'} //resets the list of color options
     for (let i = 0; i < designTheme.length; i++) {
@@ -85,30 +86,39 @@ Filtering Activities Based On Checkbox Selection
 //listening for events on the entire fieldset
 document.querySelector('.activities').addEventListener('change', (e) => {      
     const clicked = e.target;
-    //the clicked checkbox gets checked for whether it is already checked or not (condition). The conflicting appointments get greyed out or are made available again (code block)
-    if (activitiesCheckboxes[1] === clicked && activitiesCheckboxes[1].checked === true) {activitiesCheckboxes[3].disabled = true}
-    else if (activitiesCheckboxes[1] === clicked && activitiesCheckboxes[1].checked === false) {activitiesCheckboxes[3].disabled = false}
-    if (activitiesCheckboxes[2] === clicked && activitiesCheckboxes[2].checked === true) {activitiesCheckboxes[4].disabled = true}
-    else if (activitiesCheckboxes[2] === clicked && activitiesCheckboxes[2].checked === false) {activitiesCheckboxes[4].disabled = false}
-    if (activitiesCheckboxes[3] === clicked && activitiesCheckboxes[3].checked === true) {activitiesCheckboxes[1].disabled = true}
-    else if (activitiesCheckboxes[3] === clicked && activitiesCheckboxes[3].checked === false) {activitiesCheckboxes[1].disabled = false}
-    if (activitiesCheckboxes[4] === clicked && activitiesCheckboxes[4].checked === true) {activitiesCheckboxes[2].disabled = true}
-    else if (activitiesCheckboxes[4] === clicked && activitiesCheckboxes[4].checked === false) {activitiesCheckboxes[2].disabled = false}
-    
-    if (activities.lastElementChild.textContent.startsWith("Total:")) {activities.removeChild(activities.lastElementChild)}; //removes the total price info once it gets updated
-   
+    const dayAndTimeClicked = clicked.getAttribute('data-day-and-time'); //checks when the event that has been chosen is scheduled 
+  
     for (let i = 0; i < activitiesCheckboxes.length; i++){
-         if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === true) 
-                {total += parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))} //adds up the cost of all checked activities
-            else if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === false) 
-                {total -= parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))} //subtracts the cost of all unchecked activities
+
+        //this part of the loop checks for conflicting events
+        let dayAndTime = activitiesCheckboxes[i].getAttribute('data-day-and-time'); //checks when each event has been scheduled
+        if (dayAndTime === dayAndTimeClicked && activitiesCheckboxes[i] !== clicked && activitiesCheckboxes[i].disabled === true) { //checks whether the event has been greyed out but should no longer be since the conflicting event is no longer selected
+            activitiesCheckboxes[i].disabled = false
+        } 
+        else if (dayAndTime === dayAndTimeClicked && activitiesCheckboxes[i] !== clicked) { //an event should be greyed out if a conflicting event is selected
+            activitiesCheckboxes[i].disabled = true
+        } 
+
+        //this part of the loop calculates the price total for all selected events
+        if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === true) { //adds up the cost of all checked activities
+             total += parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))
+            } 
+        else if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === false) { //subtracts the cost of all unchecked activities
+                total -= parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))
+            } 
     }
+
+    if (activities.lastElementChild.textContent.startsWith("Total:")) { //removes the total price info once it gets updated
+        activities.removeChild(activities.lastElementChild)
+    }; 
     
-    if (total > 0) //makes sure the total is only displayed when it is not 0
-    {let totalCost = document.createElement('p'); 
-    totalCost.textContent = `Total: ${total}`;
-    activities.appendChild(totalCost)} //displays the total amount under the checkboxes
-})
+    if (total > 0) { //makes sure the total is only displayed when it is not 0
+        let totalCost = document.createElement('p'); 
+        totalCost.textContent = `Total: ${total}`;
+        activities.appendChild(totalCost) //attaches a display of the total amount underneath the checkboxes
+    } 
+}
+)
 
 
 /*** 
@@ -134,12 +144,12 @@ for (let i = 0; i < selectPaymentMethod.length; i++) {
     creditCardInfo.style.display = 'none';
     paypalInfo.style.display = 'block';
     bitcoinInfo.style.display = 'none';
-}
+    }
     else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'bitcoin') {
     creditCardInfo.style.display = 'none';
     paypalInfo.style.display = 'none';
     bitcoinInfo.style.display = 'block';
-}
+    }
 }})
 
 /*** 
@@ -147,16 +157,22 @@ Validation
 ***/
 
 const nameFieldValidator = () => {
-if (nameField.value.length > 0) {nameField.style.borderColor = "white"; return true} //checks whether the user has typed something into the name field
-else {nameField.style.borderColor = "red"; return false}
+    if (nameField.value.length > 0) { //checks whether the user has typed something into the name field
+        nameField.style.borderColor = "white"; return true
+    } 
+    else {
+        nameField.style.borderColor = "red"; return false
+    }
 }
 
 const emailFieldValidator = () => {
-const emailRegex = /^[^@]+@[^@.]+\.[a-z]+$/i; //defines how an e-mail should be formatted
-if(emailRegex.test(email.value)){//checks whether the typed in mail address fits that definition
-    email.style.borderColor = "white"; return true;
-} 
-else {email.style.borderColor = "red"; return false;}
+    const emailRegex = /^[^@]+@[^@.]+\.[a-z]+$/i; //defines how an e-mail should be formatted
+    if (emailRegex.test(email.value)){//checks whether the typed in mail address fits that definition
+         email.style.borderColor = "white"; return true;
+    } 
+    else {
+        email.style.borderColor = "red"; return false;
+    }
 }
 
 const activitiesValidator = () => {
@@ -168,11 +184,13 @@ const activitiesValidator = () => {
 }
 
 const creditCardValidator = () => {
-const creditCardNumberRegex = /^\d{13}(\d{3})?$/
-if (creditCardNumberRegex.test(creditCardNumberField.value)){
+    const creditCardNumberRegex = /^\d{13}(\d{3})?$/
+    if (creditCardNumberRegex.test(creditCardNumberField.value)){
     creditCardNumberField.style.borderColor = "white"; return true;
-}
-else {creditCardNumberField.style.borderColor = "red"; return false;}
+    }
+    else {
+        creditCardNumberField.style.borderColor = "red"; return false;
+    }
 }
 
 const zipValidator = () => {
@@ -180,7 +198,9 @@ const zipValidator = () => {
     if (zipRegex.test(zipField.value)){
         zipField.style.borderColor = "white"; return true;
     }
-    else {zipField.style.borderColor = "red"; return false;}
+    else {
+        zipField.style.borderColor = "red"; return false;
+    }
     }
 
 const cvvValidator = () => {
@@ -188,12 +208,15 @@ const cvvValidator = () => {
     if (cvvRegex.test(cvvField.value)){
         cvvField.style.borderColor = "white"; return true;
     }
-    else {cvvField.style.borderColor = "red"; return false;}
+    else {
+        cvvField.style.borderColor = "red"; return false;
+    }
     }
 
 form.addEventListener('submit', (e)=>{
+    //each conditional checks the return value of the function and stops submission if it is false
 nameFieldValidator();
-if (!nameFieldValidator()) {e.preventDefault(); console.log('A name is missing')} //checks the return value of the function and stops submission if it is false
+if (!nameFieldValidator()) {e.preventDefault(); console.log('A name is missing')} 
 
 emailFieldValidator();
 if (!emailFieldValidator()) {e.preventDefault(); console.log('That is not an e-mail address')}
