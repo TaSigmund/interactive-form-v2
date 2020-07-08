@@ -1,5 +1,5 @@
 /***
-Selecting Elements
+GLOBAL VARIABLES
 ***/
 
 const form = document.querySelector('form');
@@ -35,7 +35,7 @@ const bitcoinInfo = document.getElementById('bitcoin');
 
 
 /***
-Initial Styling
+INITIAL STYLING
 ***/
 
 //Name Field Styling
@@ -54,7 +54,7 @@ colorOptionsDiv.style.display = 'none'; //hides the color field initially
 designField.addEventListener('change', ()=> {colorOptionsDiv.style.display = 'block'}) //shows color field once a theme gets selected
 
 /*** 
-Display Input Field For 'Other' Job Role
+'OTHER' JOB ROLE
 ***/
 
 jobRoleField.addEventListener('change', ()=>{
@@ -63,7 +63,7 @@ jobRoleField.addEventListener('change', ()=>{
 })
 
 /*** 
-Limiting Color Options Based On Selected Theme 
+LIMITING COLOR OPTIONS BASED ON SELECTED THEME
 ***/
 
 designField.addEventListener('change', ()=> {
@@ -84,7 +84,7 @@ designField.addEventListener('change', ()=> {
     })
 
 /*** 
-Filtering Activities Based On Checkbox Selection
+FILTERING ACTIVITIES BASED ON CHECKBOX SELECTION
 ***/
 
 //listening for events on the entire fieldset
@@ -126,7 +126,7 @@ document.querySelector('.activities').addEventListener('change', (e) => {
 
 
 /*** 
-Payment options
+FILTERING PAYMENT OPTIONS BASED ON SELECTION
 ***/
 
 selectPaymentMethod[0].style.display = 'none'; //'Select Payment Option' does not appear in the drop down menu
@@ -157,26 +157,29 @@ for (let i = 0; i < selectPaymentMethod.length; i++) {
 }})
 
 /*** 
-Validation
+VALIDATION
 ***/
 
-const nameFieldValidator = () => {
-    if (nameField.value.length > 0) { //checks whether the user has typed something into the name field
-        nameField.style.borderColor = "white"; return true
+/* 
+function to test every field for it's corresponding regex
+*/
+function regexTest (regex, formField) {
+    if (regex.test(formField.value)){   //checks whether the typed information matches the regex
+    formField.style.borderColor = "white"; return true;
     } 
     else {
-        nameField.style.borderColor = "red"; return false
+   formField.style.borderColor = "red"; return false;
     }
+}
+
+const nameFieldValidator = () => {
+    const nameRegex = /^.{1,}$/;
+    return regexTest(nameRegex, nameField)
 }
 
 const emailFieldValidator = () => {
     const emailRegex = /^[^@]+@[^@.]+\.[a-z]+$/i; //defines how an e-mail should be formatted
-    if (emailRegex.test(emailField.value)){//checks whether the typed in mail address fits that definition
-         emailField.style.borderColor = "white"; return true;
-    } 
-    else {
-        emailField.style.borderColor = "red"; return false;
-    }
+    return regexTest(emailRegex, emailField)
 }
 
 const activitiesValidator = () => {
@@ -189,34 +192,19 @@ const activitiesValidator = () => {
 }
 
 const creditCardValidator = () => {
-    const creditCardNumberRegex = /^\d{13}(\d{3})?$/
-    if (creditCardNumberRegex.test(creditCardNumberField.value)){
-    creditCardNumberField.style.borderColor = "white"; return true;
-    }
-    else {
-        creditCardNumberField.style.borderColor = "red"; return false;
-    }
+    const creditCardNumberRegex = /^\d{13}(\d{3})?$/;
+    return regexTest(creditCardNumberRegex, creditCardNumberField);
 }
 
 const zipValidator = () => {
-    const zipRegex = /^\d{5}$/
-    if (zipRegex.test(zipField.value)){
-        zipField.style.borderColor = "white"; return true;
-    }
-    else {
-        zipField.style.borderColor = "red"; return false;
-    }
-    }
+    const zipRegex = /^\d{5}$/;
+    return regexTest(zipRegex, zipField);
+}
 
 const cvvValidator = () => {
-    const cvvRegex = /^\d{3}$/
-    if (cvvRegex.test(cvvField.value)){
-        cvvField.style.borderColor = "white"; return true;
-    }
-    else {
-        cvvField.style.borderColor = "red"; return false;
-    }
-    }
+    const cvvRegex = /^\d{3}$/;
+    return regexTest(cvvRegex, cvvField);
+}
 
 /* 
 function to create error messages for validation 
