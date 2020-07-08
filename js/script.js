@@ -3,9 +3,13 @@ Selecting Elements
 ***/
 
 const form = document.querySelector('form');
+
+//text fields
 const nameField = document.getElementById('name');
-const email = document.getElementById('mail');
+const emailField = document.getElementById('mail');
 const otherJobRole = document.getElementById('other-title');
+
+//select menues
 const colorOptionsDiv = document.getElementById('colors-js-puns')
 const colorOptionsField = document.getElementById('color');
 const color = document.querySelectorAll('#color option')
@@ -167,11 +171,11 @@ const nameFieldValidator = () => {
 
 const emailFieldValidator = () => {
     const emailRegex = /^[^@]+@[^@.]+\.[a-z]+$/i; //defines how an e-mail should be formatted
-    if (emailRegex.test(email.value)){//checks whether the typed in mail address fits that definition
-         email.style.borderColor = "white"; return true;
+    if (emailRegex.test(emailField.value)){//checks whether the typed in mail address fits that definition
+         emailField.style.borderColor = "white"; return true;
     } 
     else {
-        email.style.borderColor = "red"; return false;
+        emailField.style.borderColor = "red"; return false;
     }
 }
 
@@ -179,7 +183,8 @@ const activitiesValidator = () => {
    for (let i = 0; i < activitiesCheckboxes.length; i++) {
        if (activitiesCheckboxes[i].checked) {activities.style.borderColor = 'white'; return true}
    }
-   activities.firstElementChild.style.color = 'red'; //this line only gets executed if no checkbox has been checked 
+   //because of the return statement above the following two lines only gets executed if no checkbox has been checked 
+   activities.firstElementChild.style.color = 'red'; 
    return false; 
 }
 
@@ -213,26 +218,52 @@ const cvvValidator = () => {
     }
     }
 
+/* 
+function to create error messages for validation 
+*/
+
+function errorMessage(appendTo, message) {
+    let errorParagraph = document.createElement('p');
+    errorParagraph.textContent = message;
+    errorParagraph.className = 'error';
+    errorParagraph.style.color = 'red';
+    appendTo.appendChild(errorParagraph);
+}
+
+/* 
+event listener that stops submission if validation fails and prints the error messages
+*/
+
 form.addEventListener('submit', (e)=>{
-    //each conditional checks the return value of the function and stops submission if it is false
-nameFieldValidator();
-if (!nameFieldValidator()) {e.preventDefault(); console.log('A name is missing')} 
 
-emailFieldValidator();
-if (!emailFieldValidator()) {e.preventDefault(); console.log('That is not an e-mail address')}
+    //the next 3 lines remove any errorMessages from previous form submissions
+    let errorList = document.querySelectorAll('.error');
+    if (errorList.length > 0) {
+        for(let i = 0; i < errorList.length; i++){errorList[i].parentNode.removeChild(errorList[i])}
+    }
 
-activitiesValidator();
-if (!activitiesValidator()) {e.preventDefault(); console.log('No activity has been chosen')}
+    //each conditional checks the return value of the function and stops submission if it is false and pints an error message where information is missing
 
-creditCardValidator();
-if (!creditCardValidator()) {e.preventDefault(); console.log('That is not a credit card number')}
+    nameFieldValidator(); 
+    if (!nameFieldValidator()) {e.preventDefault(); errorMessage(nameField.previousElementSibling, 'Please type in your name!')}
+   
+    emailFieldValidator();
+    if (!emailFieldValidator()) {e.preventDefault(); errorMessage(emailField.previousElementSibling, 'This is not a valid e-mail adress.')}
 
-zipValidator();
-if (!zipValidator()) {e.preventDefault(); console.log('That is not a ZIP code')}
+    activitiesValidator();
+    if (!activitiesValidator()) {e.preventDefault(); errorMessage(activities, 'Choose an activity!')}
 
-cvvValidator();
-if (!cvvValidator()) {e.preventDefault(); console.log('That is not a cvv number')}
+    creditCardValidator();
+    if (!creditCardValidator()) {e.preventDefault(); errorMessage(paymentField.nextElementSibling, 'This is not a valid credit card number.')}
+
+    zipValidator();
+    if (!zipValidator()) {e.preventDefault(); errorMessage(paymentField.nextElementSibling, 'This is not a valid ZIP code.')}
+  
+    cvvValidator();
+    if (!cvvValidator()) {e.preventDefault(); errorMessage(paymentField.nextElementSibling, 'This is not a valid cvv number.')}
 })
+
+
 
 
 
