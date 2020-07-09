@@ -35,27 +35,17 @@ const bitcoinInfo = document.getElementById('bitcoin');
 
 
 /***
-INITIAL STYLING
+INITIAL FOCUS
 ***/
 
-//Name Field Styling
 window.addEventListener('load', ()=>{nameField.focus()}); //puts focus on the name field when page is loaded
 
-//Job Role Styling
-otherJobRole.style.display = 'none'; //hides the text input field initially
-
-//T-Shirt Info -> Color Option Styling
-const chooseColor = document.createElement('option'); //creates a new option for colors
-chooseColor.textContent = 'Pick a color'; //sets the text of that option
-colorOptionsField.insertBefore(chooseColor, colorOptionsField.firstElementChild); //inserts that option
-const allColorOptions = document.querySelectorAll('#color option'); //selects all color options, including the newly created one
-allColorOptions[0].selected = true; //selects the newly created option
-colorOptionsDiv.style.display = 'none'; //hides the color field initially 
-designField.addEventListener('change', ()=> {colorOptionsDiv.style.display = 'block'}) //shows color field once a theme gets selected
 
 /*** 
-'OTHER' JOB ROLE
+HIDE AND SHOW 'OTHER' JOB ROLE FIELD
 ***/
+
+otherJobRole.style.display = 'none'; //hides the text input field initially
 
 jobRoleField.addEventListener('change', ()=>{
     if (jobRole[5].selected) {otherJobRole.style.display = 'block';} //displays input field for 'other' job role gets selected
@@ -65,6 +55,15 @@ jobRoleField.addEventListener('change', ()=>{
 /*** 
 LIMITING COLOR OPTIONS BASED ON SELECTED THEME
 ***/
+
+
+const chooseColor = document.createElement('option'); //creates a new option for colors
+chooseColor.textContent = 'Pick a color'; //sets the text of that option
+colorOptionsField.insertBefore(chooseColor, colorOptionsField.firstElementChild); //inserts that option
+const allColorOptions = document.querySelectorAll('#color option'); //selects all color options, including the newly created one
+allColorOptions[0].selected = true; //selects the newly created option
+colorOptionsDiv.style.display = 'none'; //hides the color field initially 
+designField.addEventListener('change', ()=> {colorOptionsDiv.style.display = 'block'}) //shows color field once a theme gets selected
 
 designField.addEventListener('change', ()=> {
     for (let j = 0; j < color.length; j++) {color[j].style.display = 'block'} //resets the list of color options
@@ -131,28 +130,27 @@ FILTERING PAYMENT OPTIONS BASED ON SELECTION
 
 selectPaymentMethod[0].style.display = 'none'; //'Select Payment Option' does not appear in the drop down menu
 
+// helper function to show one payment option and hide the other two
+function showAndHide(show, hide1, hide2) {
+    show.style.display = 'block';
+    hide1.style.display = 'none';
+    hide2.style.display = 'none';
+}
+
 //initially only the credit card fields appear
-creditCardInfo.style.display = 'block';
-paypalInfo.style.display = 'none';
-bitcoinInfo.style.display = 'none';
+showAndHide(creditCardInfo, paypalInfo, bitcoinInfo)
 
 //depending on what payment option the user selects the corresponding field becomes visible and the other fields are hidden
 paymentField.addEventListener('change', () => {
 for (let i = 0; i < selectPaymentMethod.length; i++) {
-  if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'credit card') {
-        creditCardInfo.style.display = 'block';
-        paypalInfo.style.display = 'none';
-        bitcoinInfo.style.display = 'none';
+    if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'credit card') {
+    showAndHide(creditCardInfo, paypalInfo, bitcoinInfo)
    }
-   else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'paypal') {
-    creditCardInfo.style.display = 'none';
-    paypalInfo.style.display = 'block';
-    bitcoinInfo.style.display = 'none';
+    else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'paypal') {
+    showAndHide(paypalInfo, creditCardInfo, bitcoinInfo)
     }
     else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'bitcoin') {
-    creditCardInfo.style.display = 'none';
-    paypalInfo.style.display = 'none';
-    bitcoinInfo.style.display = 'block';
+    showAndHide(bitcoinInfo, creditCardInfo, paypalInfo)
     }
 }})
 
@@ -160,9 +158,8 @@ for (let i = 0; i < selectPaymentMethod.length; i++) {
 VALIDATION
 ***/
 
-/* 
-function to test every field for it's corresponding regex
-*/
+
+// Helper function to test every field for it's corresponding regex
 function regexTest (regex, formField) {
     if (regex.test(formField.value)){   //checks whether the typed information matches the regex
     formField.style.borderColor = "white"; return true;
@@ -206,9 +203,8 @@ const cvvValidator = () => {
     return regexTest(cvvRegex, cvvField);
 }
 
-/* 
-function to create error messages for validation 
-*/
+
+// helper function to create error messages for validation 
 
 function errorMessage(appendTo, message) {
     let errorParagraph = document.createElement('p');
@@ -218,9 +214,9 @@ function errorMessage(appendTo, message) {
     appendTo.appendChild(errorParagraph);
 }
 
-/* 
-event listener that stops submission if validation fails and prints the error messages
-*/
+/*** 
+EVENT LISTENER THAT STOPS SUBMISSION IF VALIDATION FAILS
+***/
 
 form.addEventListener('submit', (e)=>{
 
