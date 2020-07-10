@@ -5,33 +5,38 @@ GLOBAL VARIABLES
 const form = document.querySelector('form');
 
 //text fields
-const nameField = document.getElementById('name');
-const emailField = document.getElementById('mail');
-const otherJobRole = document.getElementById('other-title');
+const nameField = document.getElementById('name'); //the name text field
+const nameFieldLabel = document.getElementById('name').previousElementSibling; //the 'Name:' label 
+const emailField = document.getElementById('mail'); //the e-mail text field
+const emailFieldLabel = document.getElementById('mail').previousElementSibling;; //the 'E-mail:' label 
+const otherJobRole = document.getElementById('other-title'); //the 'Your Job Role' text field
 
 //select menues
-const colorOptionsDiv = document.getElementById('colors-js-puns')
-const colorOptionsField = document.getElementById('color');
-const color = document.querySelectorAll('#color option')
-const designField = document.getElementById('design'); 
-const designTheme = document.querySelectorAll('#design option');
-const jobRoleField = document.getElementById('title');
-const jobRole = document.querySelectorAll('#title option');
+const colorOptionsDiv = document.getElementById('colors-js-puns') //the div that holds the select menu
+const colorOptionsSelect = document.getElementById('color'); //the colors select menu
+const color = document.querySelectorAll('#color option'); //all color options
+const designSelect = document.getElementById('design'); //the design select menu
+const designTheme = document.querySelectorAll('#design option'); //the two design options
+const jobRoleSelect = document.getElementById('title'); //the job role select menu
+const jobRole = document.querySelectorAll('#title option'); //the job role options
 
 //activities
-const activitiesCheckboxes = document.querySelectorAll('.activities input'); 
+const activitiesCheckboxes = document.querySelectorAll('.activities input'); //the activities checkboxes
 const activities = document.querySelector('.activities'); //chooses the entire fieldset
 let total = 0; //keeps track of the total cost of activities
 
 //payment
-const paymentField = document.getElementById('payment');
+const paymentSelect = document.getElementById('payment'); //the entire payment section
 const selectPaymentMethod = document.querySelectorAll('#payment option'); //Selects the payment options
-const creditCardInfo = document.getElementById('credit-card');
-const creditCardNumberField = document.getElementById('cc-num');
-const zipField = document.getElementById('zip');
-const cvvField = document.getElementById('cvv');
-const paypalInfo = document.getElementById('paypal');
-const bitcoinInfo = document.getElementById('bitcoin');
+const creditCardInfo = document.getElementById('credit-card'); //all the info and text fields for credit card payment
+const creditCardNumberField = document.getElementById('cc-num'); //The text field for the credit card number
+const creditCardNumberLabel= document.getElementById('cc-num').previousElementSibling; // The 'Credit Card'label
+const zipField = document.getElementById('zip'); //the text field for the Zip Code
+const zipFieldLabel = document.getElementById('zip').previousElementSibling; // The 'Zip Code:' label
+const cvvField = document.getElementById('cvv'); //the text field for the cvv
+const cvvFieldLabel = document.getElementById('cvv').previousElementSibling; // The 'CVV:' label
+const paypalInfo = document.getElementById('paypal'); //the information about paypal payment
+const bitcoinInfo = document.getElementById('bitcoin'); //the information about bitcoin payment
 
 
 /***
@@ -47,7 +52,7 @@ HIDE AND SHOW 'OTHER' JOB ROLE FIELD
 
 otherJobRole.style.display = 'none'; //hides the text input field initially
 
-jobRoleField.addEventListener('change', ()=>{
+jobRoleSelect.addEventListener('change', ()=>{
     if (jobRole[5].selected) {otherJobRole.style.display = 'block';} //displays input field for 'other' job role gets selected
     else {otherJobRole.style.display = 'none'; } //Hides it again if another job role than 'other' gets selected
 })
@@ -59,25 +64,30 @@ LIMITING COLOR OPTIONS BASED ON SELECTED THEME
 
 const chooseColor = document.createElement('option'); //creates a new option for colors
 chooseColor.textContent = 'Pick a color'; //sets the text of that option
-colorOptionsField.insertBefore(chooseColor, colorOptionsField.firstElementChild); //inserts that option
+colorOptionsSelect.insertBefore(chooseColor, colorOptionsSelect.firstElementChild); //inserts that option
 const allColorOptions = document.querySelectorAll('#color option'); //selects all color options, including the newly created one
 allColorOptions[0].selected = true; //selects the newly created option
 colorOptionsDiv.style.display = 'none'; //hides the color field initially 
-designField.addEventListener('change', ()=> {colorOptionsDiv.style.display = 'block'}) //shows color field once a theme gets selected
+designSelect.addEventListener('change', ()=> {colorOptionsDiv.style.display = 'block'}) //shows color field once a theme gets selected
 
-designField.addEventListener('change', ()=> {
+//helper function to hide 3 colors
+function hideColors(first, second, third) {
+            color[first].style.display = 'none';
+            color[second].style.display = 'none';
+            color[third].style.display = 'none';
+}
+
+designSelect.addEventListener('change', ()=> {
     for (let j = 0; j < color.length; j++) {color[j].style.display = 'block'} //resets the list of color options
     for (let i = 0; i < designTheme.length; i++) {
-        if (designTheme[0].selected) {colorOptionsDiv.style.display = 'none'} //hides color options if "Select Theme" gets selected
+        if (designTheme[0].selected) {
+            colorOptionsDiv.style.display = 'none' //hides color options if "Select Theme" gets selected
+        } 
         else if (designTheme[i].selected && designTheme[i].value === 'js puns') {
-            color[3].style.display = 'none';
-            color[4].style.display = 'none';
-            color[5].style.display = 'none';
+            hideColors(3, 4, 5) 
         }
         else if (designTheme[i].selected && designTheme[i].value === 'heart js') {
-            color[0].style.display = 'none';
-            color[1].style.display = 'none';
-            color[2].style.display = 'none';
+            hideColors(0, 1, 2)
         }
     }
     })
@@ -93,7 +103,7 @@ document.querySelector('.activities').addEventListener('change', (e) => {
   
     for (let i = 0; i < activitiesCheckboxes.length; i++){
 
-        //this part of the loop checks for conflicting events
+    //this part of the loop checks for conflicting events
         let dayAndTime = activitiesCheckboxes[i].getAttribute('data-day-and-time'); //checks when each event has been scheduled
         if (dayAndTime === dayAndTimeClicked && activitiesCheckboxes[i] !== clicked && activitiesCheckboxes[i].disabled === true) { //checks whether the event has been greyed out but should no longer be since the conflicting event is no longer selected
             activitiesCheckboxes[i].disabled = false
@@ -102,7 +112,7 @@ document.querySelector('.activities').addEventListener('change', (e) => {
             activitiesCheckboxes[i].disabled = true
         } 
 
-        //this part of the loop calculates the price total for all selected events
+    //this part of the loop calculates the price total for all selected events
         if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === true) { //adds up the cost of all checked activities
              total += parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))
             } 
@@ -111,10 +121,12 @@ document.querySelector('.activities').addEventListener('change', (e) => {
             } 
     }
 
+    //remove total
     if (activities.lastElementChild.textContent.startsWith("Total:")) { //removes the total price info once it gets updated
         activities.removeChild(activities.lastElementChild)
     }; 
     
+    //display total
     if (total > 0) { //makes sure the total is only displayed when it is not 0
         let totalCost = document.createElement('p'); 
         totalCost.textContent = `Total: ${total}`;
@@ -122,7 +134,6 @@ document.querySelector('.activities').addEventListener('change', (e) => {
     } 
 }
 )
-
 
 /*** 
 FILTERING PAYMENT OPTIONS BASED ON SELECTION
@@ -141,18 +152,19 @@ function showAndHide(show, hide1, hide2) {
 showAndHide(creditCardInfo, paypalInfo, bitcoinInfo)
 
 //depending on what payment option the user selects the corresponding field becomes visible and the other fields are hidden
-paymentField.addEventListener('change', () => {
-for (let i = 0; i < selectPaymentMethod.length; i++) {
-    if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'credit card') {
-    showAndHide(creditCardInfo, paypalInfo, bitcoinInfo)
-   }
-    else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'paypal') {
-    showAndHide(paypalInfo, creditCardInfo, bitcoinInfo)
+paymentSelect.addEventListener('change', () => {
+    for (let i = 0; i < selectPaymentMethod.length; i++) {
+        if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'credit card') {
+        showAndHide(creditCardInfo, paypalInfo, bitcoinInfo)
+        }
+        else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'paypal') {
+        showAndHide(paypalInfo, creditCardInfo, bitcoinInfo)
+        }
+        else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'bitcoin') {
+        showAndHide(bitcoinInfo, creditCardInfo, paypalInfo)
+        }
     }
-    else if (selectPaymentMethod[i].selected && selectPaymentMethod[i].value === 'bitcoin') {
-    showAndHide(bitcoinInfo, creditCardInfo, paypalInfo)
-    }
-}})
+})
 
 /*** 
 VALIDATION
@@ -182,14 +194,13 @@ const emailFieldValidator = () => {
 const activitiesValidator = () => {
    for (let i = 0; i < activitiesCheckboxes.length; i++) {
        if (activitiesCheckboxes[i].checked) {activities.style.borderColor = 'white'; return true}
+       else {return false;}
    }
-   //because of the return statement above the following two lines only gets executed if no checkbox has been checked 
-   activities.firstElementChild.style.color = 'red'; 
-   return false; 
+  
 }
 
 const creditCardValidator = () => {
-    const creditCardNumberRegex = /^\d{13}(\d{3})?$/;
+    const creditCardNumberRegex = /^(\d{13,16})$/;
     return regexTest(creditCardNumberRegex, creditCardNumberField);
 }
 
@@ -204,50 +215,42 @@ const cvvValidator = () => {
 }
 
 
-// helper function to create error messages for validation 
-
-function errorMessage(appendTo, message) {
-    let errorParagraph = document.createElement('p');
-    errorParagraph.textContent = message;
-    errorParagraph.className = 'error';
-    errorParagraph.style.color = 'red';
-    appendTo.appendChild(errorParagraph);
-}
-
 /*** 
-EVENT LISTENER THAT STOPS SUBMISSION IF VALIDATION FAILS
+EVENT LISTENERS FOR VALIDATION
 ***/
 
-form.addEventListener('submit', (e)=>{
-
-    //the next 3 lines remove any errorMessages from previous form submissions
-    let errorList = document.querySelectorAll('.error');
-    if (errorList.length > 0) {
-        for(let i = 0; i < errorList.length; i++){errorList[i].parentNode.removeChild(errorList[i])}
+//helper function to provide live feedback for form validation
+function validationError(validatorFunc, labelF,  message, originalLabel, e) {
+    validatorFunc();
+    if (!validatorFunc()) {
+        labelF.textContent = message;
+        labelF.style.color = 'red';
+        if (e) {e.preventDefault()}; //only if an event object has been passed to the function -> only for the 'submit' listener
     }
+    else {labelF.textContent = originalLabel;
+        labelF.style.color = 'black';
+}}
 
-    //each conditional checks the return value of the function and stops submission if it is false and pints an error message where information is missing
-
-    nameFieldValidator(); 
-    if (!nameFieldValidator()) {e.preventDefault(); errorMessage(nameField.previousElementSibling, 'Please type in your name!')}
-   
-    emailFieldValidator();
-    if (!emailFieldValidator()) {e.preventDefault(); errorMessage(emailField.previousElementSibling, 'This is not a valid e-mail adress.')}
-
-    activitiesValidator();
-    if (!activitiesValidator()) {e.preventDefault(); errorMessage(activities, 'Choose an activity!')}
-
-    creditCardValidator();
-    if (!creditCardValidator()) {e.preventDefault(); errorMessage(paymentField.nextElementSibling, 'This is not a valid credit card number.')}
-
-    zipValidator();
-    if (!zipValidator()) {e.preventDefault(); errorMessage(paymentField.nextElementSibling, 'This is not a valid ZIP code.')}
-  
-    cvvValidator();
-    if (!cvvValidator()) {e.preventDefault(); errorMessage(paymentField.nextElementSibling, 'This is not a valid cvv number.')}
+//event listener for form validation after submission
+form.addEventListener('submit', (e)=>{
+    validationError(nameFieldValidator, nameFieldLabel,  'Name: Please provide a name!', 'Name:', e);
+    validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This is not a valid e-mail adress.', 'E-mail', e);
+    validationError(activitiesValidator, activities.firstElementChild,  'Register for Activities - Come on!', 'Register for Activities', e);
+    validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:', e);
+    validationError(cvvValidator, cvvFieldLabel, 'CVV: (3 digits)', 'CVV:', e);
+    validationError(zipValidator, zipFieldLabel, 'Zip Code: (5 digits)', 'Zip Code:', e);
 })
 
 
+//3 event listeners for live feedback on form validation
+creditCardNumberField.addEventListener('keyup', ()=>{
+    validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:');
+})
 
+cvvField.addEventListener('keyup', ()=>{
+    validationError(cvvValidator, cvvFieldLabel, 'CVV: (3 digits)', 'CVV:');
+})
 
-
+zipField.addEventListener('keyup', ()=>{
+    validationError(zipValidator, zipFieldLabel, 'Zip Code: (5 digits)', 'Zip Code:');
+})
