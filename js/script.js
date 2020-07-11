@@ -53,8 +53,8 @@ HIDE AND SHOW 'OTHER' JOB ROLE FIELD
 otherJobRole.style.display = 'none'; //hides the text input field initially
 
 jobRoleSelect.addEventListener('change', ()=>{
-    if (jobRole[5].selected) {otherJobRole.style.display = 'block';} //displays input field for 'other' job role gets selected
-    else {otherJobRole.style.display = 'none'; } //Hides it again if another job role than 'other' gets selected
+    if (jobRole[5].selected) {otherJobRole.style.display = 'block';} //displays input field if 'other' job role gets selected
+    else {otherJobRole.style.display = 'none'; } //hides it again if another job role than 'other' gets selected
 })
 
 /*** 
@@ -70,8 +70,8 @@ allColorOptions[0].selected = true; //selects the newly created option
 colorOptionsDiv.style.display = 'none'; //hides the color field initially 
 designSelect.addEventListener('change', ()=> {colorOptionsDiv.style.display = 'block'}) //shows color field once a theme gets selected
 
-//helper function to hide 3 colors
-function hideColors(first, second, third) {
+//helper function to hide 3 colors in the select menu
+function hideColors(first, second, third) { //takes index values as parameters
             color[first].style.display = 'none';
             color[second].style.display = 'none';
             color[third].style.display = 'none';
@@ -84,10 +84,10 @@ designSelect.addEventListener('change', ()=> {
             colorOptionsDiv.style.display = 'none' //hides color options if "Select Theme" gets selected
         } 
         else if (designTheme[i].selected && designTheme[i].value === 'js puns') {
-            hideColors(3, 4, 5) 
+            hideColors(3, 4, 5) //hides the heart js color options
         }
         else if (designTheme[i].selected && designTheme[i].value === 'heart js') {
-            hideColors(0, 1, 2)
+            hideColors(0, 1, 2) //hides the heart js puns color options
         }
     }
     })
@@ -98,7 +98,7 @@ FILTERING ACTIVITIES BASED ON CHECKBOX SELECTION
 
 //listening for events on the entire fieldset
 document.querySelector('.activities').addEventListener('change', (e) => {      
-    const clicked = e.target;
+    const clicked = e.target; //checks what checkbox has been clicked
     const dayAndTimeClicked = clicked.getAttribute('data-day-and-time'); //checks when the event that has been chosen is scheduled 
   
     for (let i = 0; i < activitiesCheckboxes.length; i++){
@@ -116,7 +116,7 @@ document.querySelector('.activities').addEventListener('change', (e) => {
         if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === true) { //adds up the cost of all checked activities
              total += parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))
             } 
-        else if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === false) { //subtracts the cost of all unchecked activities
+        else if (activitiesCheckboxes[i] === clicked && activitiesCheckboxes[i].checked === false) { //subtracts the cost of all activities that are unchecked after having been clicked
                 total -= parseInt(activitiesCheckboxes[i].getAttribute('data-cost'))
             } 
     }
@@ -181,8 +181,9 @@ function regexTest (regex, formField) {
     }
 }
 
+//each function (but the activitiesValidator) holds a variable that stores a regex to be tested. 
 const nameFieldValidator = () => {
-    const nameRegex = /^.{1,}$/;
+    const nameRegex = /^.{1,}$/; //the name needs to be at least one character long
     return regexTest(nameRegex, nameField)
 }
 
@@ -191,7 +192,7 @@ const emailFieldValidator = () => {
     return regexTest(emailRegex, emailField)
 }
 
-const activitiesValidator = () => {
+const activitiesValidator = () => { //this validator is an exception since it doesn't use a regex. It simply checks whether at least one checkbox has been checked.
    for (let i = 0; i < activitiesCheckboxes.length; i++) {
        if (activitiesCheckboxes[i].checked) {activities.style.borderColor = 'white'; return true}
        else {return false;}
@@ -200,17 +201,17 @@ const activitiesValidator = () => {
 }
 
 const creditCardValidator = () => {
-    const creditCardNumberRegex = /^(\d{13,16})$/;
+    const creditCardNumberRegex = /^(\d{13,16})$/; //the credit card number should be between 13 and 16 digits
     return regexTest(creditCardNumberRegex, creditCardNumberField);
 }
 
 const zipValidator = () => {
-    const zipRegex = /^\d{5}$/;
+    const zipRegex = /^\d{5}$/; //US Zip codes have 5 digits
     return regexTest(zipRegex, zipField);
 }
 
 const cvvValidator = () => {
-    const cvvRegex = /^\d{3}$/;
+    const cvvRegex = /^\d{3}$/; //the cvv needs to be 3 digits long.
     return regexTest(cvvRegex, cvvField);
 }
 
@@ -220,6 +221,7 @@ EVENT LISTENERS FOR VALIDATION
 ***/
 
 //helper function to provide live feedback for form validation
+//the parameters are 1. a function for validation 2. The element where the error message will appear 3. The error message 4. the original text of the element where the error appears 5. the event object of the event listener
 function validationError(validatorFunc, labelF,  message, originalLabel, e) {
     validatorFunc();
     if (!validatorFunc()) {
@@ -233,8 +235,14 @@ function validationError(validatorFunc, labelF,  message, originalLabel, e) {
 
 //event listener for form validation after submission
 form.addEventListener('submit', (e)=>{
+    //each validation error can prevent submission, print an error message or reestablish the original element text if everything is fine.
     validationError(nameFieldValidator, nameFieldLabel,  'Name: Please provide a name!', 'Name:', e);
-    validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This is not a valid e-mail adress.', 'E-mail', e);
+    if (emailField.value.length === 0) {
+        validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field can not be left empty.', 'E-mail:', e); //prints if the e-mail field is empty after submission
+        }
+    else {
+        validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This is not a valid e-mail adress.', 'E-mail', e); //prints if the e-mail field holds an incorrectly formatted e-mail adress as it's value
+    }
     validationError(activitiesValidator, activities.firstElementChild,  'Register for Activities - Come on!', 'Register for Activities', e);
     validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:', e);
     validationError(cvvValidator, cvvFieldLabel, 'CVV: (3 digits)', 'CVV:', e);
@@ -242,7 +250,20 @@ form.addEventListener('submit', (e)=>{
 })
 
 
-//3 event listeners for live feedback on form validation
+//5 event listeners for live feedback on form validation -> they do not hold event objects since they do not deal with submission.
+
+//the first two event listeners give feedback on the name and e-mail fields once they loose focus.
+nameField.addEventListener('blur', ()=>{
+    if (nameField.value.length === 0) {
+    validationError(nameFieldValidator, nameFieldLabel,  'Name: This field can not be left empty.', 'Name:');
+    }})
+
+emailField.addEventListener('blur', ()=>{
+    if (emailField.value.length === 0) {
+    validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field can not be left empty.', 'E-mail:');
+    }})
+
+//the following 3 give feedback on the credit card information while it is beeing typed in.
 creditCardNumberField.addEventListener('keyup', ()=>{
     validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:');
 })

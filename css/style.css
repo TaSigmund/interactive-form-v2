@@ -16,7 +16,7 @@ button {
 
 body {
   font: 1em/1.5;
-  color: rgba(6, 49, 68, 0.9);
+  color: rgba(15, 8, 109, 0.85);
 	background: #CDE0FB;
 }
 
@@ -26,7 +26,7 @@ header {
 
 h1 {
 	font-size: 2.5em;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+	text-shadow: 0 1px 0 rgba(15, 8, 109, 0.85);
 	margin: 0;
 }
 
@@ -40,8 +40,8 @@ a {
 
 form {
 	padding: .875em 1.875em 1.875em;
-	background: #9BBEEF;
-	border: 2px solid rgba(8, 63, 87, 0.6);
+	background: rgb(116, 192, 255);
+	border: 2px solid rgba(15, 8, 109, 0.85);
 	border-radius: 3px;
 }
 
@@ -64,7 +64,7 @@ button {
 legend {
 	font-weight: bold;
 	padding-top: .5em;
-	border-top: 2px solid rgba(8, 63, 87, 0.6);
+	border-top: 2px solid rgba(15, 8, 109, 0.85);
 	margin-bottom: 1.125em;
 }
 
@@ -109,7 +109,7 @@ input[type="radio"] {
 button {
 	color: #fff;
 	padding: .55em 1.25em;
-	background: #083f57;
+	background: rgba(15, 8, 109, 0.85);
 	margin: 1.25em 0 .5em;
 	cursor: pointer;
 	border: 2px solid black;
