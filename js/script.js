@@ -54,7 +54,7 @@ otherJobRole.style.display = 'none'; //hides the text input field initially
 
 jobRoleSelect.addEventListener('change', ()=>{
     if (jobRole[5].selected) {otherJobRole.style.display = 'block';} //displays input field if 'other' job role gets selected
-    else {otherJobRole.style.display = 'none'; } //hides it again if another job role than 'other' gets selected
+    else {otherJobRole.style.display = 'none'; } //hides it again if job role other than 'other' gets selected
 })
 
 /*** 
@@ -129,7 +129,7 @@ document.querySelector('.activities').addEventListener('change', (e) => {
     //display total
     if (total > 0) { //makes sure the total is only displayed when it is not 0
         let totalCost = document.createElement('p'); 
-        totalCost.textContent = `Total: ${total}`;
+        totalCost.textContent = `Total: $${total}`;
         activities.appendChild(totalCost) //attaches a display of the total amount underneath the checkboxes
     } 
 }
@@ -171,7 +171,7 @@ VALIDATION
 ***/
 
 
-// Helper function to test every field for it's corresponding regex
+// Helper function to test every field for its corresponding regex
 function regexTest (regex, formField) {
     if (regex.test(formField.value)){   //checks whether the typed information matches the regex
     formField.style.borderColor = "white"; return true;
@@ -181,7 +181,7 @@ function regexTest (regex, formField) {
     }
 }
 
-//each function (but the activitiesValidator) holds a variable that stores a regex to be tested. 
+//each function (but the activitiesValidator) holds a variable that stores a regex to be tested
 const nameFieldValidator = () => {
     const nameRegex = /^.{1,}$/; //the name needs to be at least one character long
     return regexTest(nameRegex, nameField)
@@ -238,10 +238,10 @@ form.addEventListener('submit', (e)=>{
     //each validation error can prevent submission, print an error message or reestablish the original element text if everything is fine.
     validationError(nameFieldValidator, nameFieldLabel,  'Name: Please provide a name!', 'Name:', e);
     if (emailField.value.length === 0) {
-        validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field can not be left empty.', 'E-mail:', e); //prints if the e-mail field is empty after submission
+        validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field cannot be left empty.', 'E-mail:', e); //prints if the e-mail field is empty after submission
         }
     else {
-        validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This is not a valid e-mail adress.', 'E-mail', e); //prints if the e-mail field holds an incorrectly formatted e-mail adress as it's value
+        validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This is not a valid e-mail adress.', 'E-mail', e); //prints if the e-mail field holds an incorrectly formatted e-mail address as its value
     }
     validationError(activitiesValidator, activities.firstElementChild,  'Register for Activities - Come on!', 'Register for Activities', e);
     validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:', e);
@@ -252,10 +252,10 @@ form.addEventListener('submit', (e)=>{
 
 //5 event listeners for live feedback on form validation -> they do not hold event objects since they do not deal with submission.
 
-//the first two event listeners give feedback on the name and e-mail fields once they loose focus.
+//the first two event listeners give feedback on the name and e-mail fields once they lose focus.
 nameField.addEventListener('blur', ()=>{
     if (nameField.value.length === 0) {
-    validationError(nameFieldValidator, nameFieldLabel,  'Name: This field can not be left empty.', 'Name:');
+    validationError(nameFieldValidator, nameFieldLabel,  'Name: This field cannot be left empty.', 'Name:');
     }})
 
 emailField.addEventListener('blur', ()=>{
@@ -263,7 +263,7 @@ emailField.addEventListener('blur', ()=>{
     validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field can not be left empty.', 'E-mail:');
     }})
 
-//the following 3 give feedback on the credit card information while it is beeing typed in.
+//the following 3 give feedback on the credit card information while it is being typed in.
 creditCardNumberField.addEventListener('keyup', ()=>{
     validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:');
 })
