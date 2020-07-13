@@ -26,7 +26,7 @@ const activities = document.querySelector('.activities'); //chooses the entire f
 let total = 0; //keeps track of the total cost of activities
 
 //payment
-const paymentSelect = document.getElementById('payment'); //the entire payment section
+const paymentSelect = document.getElementById('payment'); //the payment select menu
 const selectPaymentMethod = document.querySelectorAll('#payment option'); //Selects the payment options
 const creditCardInfo = document.getElementById('credit-card'); //all the info and text fields for credit card payment
 const creditCardNumberField = document.getElementById('cc-num'); //The text field for the credit card number
@@ -108,11 +108,13 @@ document.querySelector('.activities').addEventListener('change', (e) => {
 
     //this part of the loop checks for conflicting events
         let dayAndTime = activitiesCheckboxes[i].getAttribute('data-day-and-time'); //checks when each event has been scheduled
-        if (dayAndTime === dayAndTimeClicked && activitiesCheckboxes[i] !== clicked && activitiesCheckboxes[i].disabled === true) { //checks whether the event has been greyed out but should no longer be since the conflicting event is no longer selected
+        if (dayAndTime === dayAndTimeClicked && activitiesCheckboxes[i] !== clicked && activitiesCheckboxes[i].disabled === true) { //checks whether the event has been greyd out but should no longer be since the conflicting event is no longer selected
             activitiesCheckboxes[i].disabled = false
+            activitiesCheckboxes[i].parentNode.style.color = 'black'; //changes the font back to black if it has been previously greyd out
         } 
-        else if (dayAndTime === dayAndTimeClicked && activitiesCheckboxes[i] !== clicked) { //an event should be greyed out if a conflicting event is selected
-            activitiesCheckboxes[i].disabled = true
+        else if (dayAndTime === dayAndTimeClicked && activitiesCheckboxes[i] !== clicked) { //an event should be greyd out if a conflicting event is selected
+            activitiesCheckboxes[i].disabled = true; 
+            activitiesCheckboxes[i].parentNode.style.color = 'lightgrey'; //greys out the label when the checkbox is disabled
         } 
 
     //this part of the loop calculates the price total for all selected events
@@ -142,7 +144,7 @@ document.querySelector('.activities').addEventListener('change', (e) => {
 FILTERING PAYMENT OPTIONS BASED ON SELECTION
 ***/
 
-selectPaymentMethod[0].style.display = 'none'; //'Select Payment Option' does not appear in the drop down menu
+paymentSelect.removeChild(selectPaymentMethod[0]) //removes the 'Select payment method' option
 
 // helper function to show one payment option and hide the other two
 function showAndHide(show, hide1, hide2) {
@@ -247,9 +249,11 @@ form.addEventListener('submit', (e)=>{
         validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This is not a valid e-mail adress.', 'E-mail', e); //prints if the e-mail field holds an incorrectly formatted e-mail address as its value
     }
     validationError(activitiesValidator, activities.firstElementChild,  'Register for Activities - Come on!', 'Register for Activities', e);
-    validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:', e);
-    validationError(cvvValidator, cvvFieldLabel, 'CVV: (3 digits)', 'CVV:', e);
-    validationError(zipValidator, zipFieldLabel, 'Zip Code: (5 digits)', 'Zip Code:', e);
+    if (selectPaymentMethod[1].selected === true){ //makes sure the credit card validation only prevents submission if 'Credit Card' is selected.
+        validationError(creditCardValidator, creditCardNumberLabel, 'Credit Card: (13-16 digits)', 'Credit Card:', e);
+        validationError(cvvValidator, cvvFieldLabel, 'CVV: (3 digits)', 'CVV:', e);
+        validationError(zipValidator, zipFieldLabel, 'Zip Code: (5 digits)', 'Zip Code:', e);
+    }
 })
 
 
