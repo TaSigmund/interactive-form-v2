@@ -63,7 +63,7 @@ LIMITING COLOR OPTIONS BASED ON SELECTED THEME
 
 
 const chooseColor = document.createElement('option'); //creates a new option for colors
-chooseColor.textContent = 'Pick a color'; //sets the text of that option
+chooseColor.textContent = 'Please select a T-shirt theme'; //sets the text of that option
 colorOptionsSelect.insertBefore(chooseColor, colorOptionsSelect.firstElementChild); //inserts that option
 const allColorOptions = document.querySelectorAll('#color option'); //selects all color options, including the newly created one
 allColorOptions[0].selected = true; //selects the newly created option
@@ -81,12 +81,15 @@ designSelect.addEventListener('change', ()=> {
     for (let j = 0; j < color.length; j++) {color[j].style.display = 'block'} //resets the list of color options
     for (let i = 0; i < designTheme.length; i++) {
         if (designTheme[0].selected) {
-            colorOptionsDiv.style.display = 'none' //hides color options if "Select Theme" gets selected
+            colorOptionsSelect.disabled = true; //greys out the color select menu
+            allColorOptions[0].selected= true; //displays 'Please select a T-shirt theme' in the colors select menu
         } 
         else if (designTheme[i].selected && designTheme[i].value === 'js puns') {
+            colorOptionsSelect.disabled = false;
             hideColors(3, 4, 5) //hides the heart js color options
         }
         else if (designTheme[i].selected && designTheme[i].value === 'heart js') {
+            colorOptionsSelect.disabled = false;
             hideColors(0, 1, 2) //hides the heart js puns color options
         }
     }
@@ -260,8 +263,17 @@ nameField.addEventListener('blur', ()=>{
 
 emailField.addEventListener('blur', ()=>{
     if (emailField.value.length === 0) {
-    validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field can not be left empty.', 'E-mail:');
+    validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field cannot be left empty.', 'E-mail:');
     }})
+
+//in addition to the blur event handler and the submit event handler there is also a keyup submit handler on the email field that kicks in once the user starts typing.
+emailField.addEventListener('keyup', ()=>{
+if (emailField.value.length === 0) {
+    validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This field cannot be left empty.', 'E-mail:'); //prints if the e-mail field is empty e.g. when a user deletes his text
+    }
+else {
+    validationError(emailFieldValidator, emailFieldLabel,  'E-mail: This is not a valid e-mail adress.', 'E-mail'); //prints if the e-mail field holds an incorrectly formatted e-mail address as its value
+}})
 
 //the following 3 give feedback on the credit card information while it is being typed in.
 creditCardNumberField.addEventListener('keyup', ()=>{

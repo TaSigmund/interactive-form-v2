@@ -4,6 +4,7 @@ Fields that fail validation turn red and
 an error message appears.
 There is live feedback for the name and
 e-mail field once they lose focus and for
-the credit card information as the user types.
+the credit card information and the
+e-mail field as the user types.
 Selection options are filtered based on previous
 selection.
