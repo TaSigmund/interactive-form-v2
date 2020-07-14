@@ -82,14 +82,14 @@ designSelect.addEventListener('change', ()=> {
     for (let i = 0; i < designTheme.length; i++) {
         allColorOptions[0].selected= true; //displays 'Please select a T-shirt theme' in the colors select menu
         if (designTheme[0].selected) {
-            colorOptionsSelect.disabled = true; //greys out the color select menu
+            colorOptionsDiv.style.display = 'none'; //hides the color
         } 
         else if (designTheme[i].selected && designTheme[i].value === 'js puns') {
-            colorOptionsSelect.disabled = false;
+            colorOptionsDiv.style.display = 'block'; //shows the color field
             hideColors(3, 4, 5) //hides the heart js color options
         }
         else if (designTheme[i].selected && designTheme[i].value === 'heart js') {
-            colorOptionsSelect.disabled = false;
+            colorOptionsDiv.style.display = 'block'; //shows the color field
             hideColors(0, 1, 2) //hides the heart js puns color options
         }
     }
