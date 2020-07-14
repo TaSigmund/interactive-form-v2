@@ -80,9 +80,9 @@ function hideColors(first, second, third) { //takes index values as parameters
 designSelect.addEventListener('change', ()=> {
     for (let j = 0; j < color.length; j++) {color[j].style.display = 'block'} //resets the list of color options
     for (let i = 0; i < designTheme.length; i++) {
+        allColorOptions[0].selected= true; //displays 'Please select a T-shirt theme' in the colors select menu
         if (designTheme[0].selected) {
             colorOptionsSelect.disabled = true; //greys out the color select menu
-            allColorOptions[0].selected= true; //displays 'Please select a T-shirt theme' in the colors select menu
         } 
         else if (designTheme[i].selected && designTheme[i].value === 'js puns') {
             colorOptionsSelect.disabled = false;
